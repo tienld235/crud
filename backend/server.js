@@ -20,7 +20,7 @@ mongoose.connect(dbUrl, function (err, db) {
     console.log("connected")
     app.get('/api/games', (req, res) => {
         db.collection('games').find({}).toArray((err, games) => {
-            res.json({ games });
+            res.json(games);
         });
     })
 

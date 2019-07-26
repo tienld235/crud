@@ -1,4 +1,4 @@
-import { GET_GAMES } from '../actionTypes/index';
+import { GET_GAMES, CREATE_GAME} from '../actionTypes/index';
 export function fetchGames() {
     return async dispatch => {
         const response  = await fetch('http://127.0.0.1:5000/api/games');
@@ -7,10 +7,10 @@ export function fetchGames() {
     }
 }
 
-export function getGames(games) {
+export function getGames(game) {
     return {
         type: GET_GAMES,
-        games
+        game
     }
 }
 
@@ -24,9 +24,16 @@ function handleResponse(response) {
     }
 }
 
-export function createGame(data) {
+export function createGame(game){
+    return {
+        type: CREATE_GAME,
+        game
+    }
+}
+
+export function saveGame(data) {
     return async dispatch => {
-        const games = await fetch('http://127.0.0.1:5000/api/games', {
+        const game = await fetch('http://127.0.0.1:5000/api/games', {
             method: 'post',
             body: JSON.stringify(data),
             headers: {
@@ -35,6 +42,7 @@ export function createGame(data) {
         });
         // console.log("games", games);
         
-        handleResponse(games);
+        handleResponse(game);
+        await dispatch(createGame(game));
     }
 }

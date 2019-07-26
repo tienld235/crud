@@ -1,7 +1,6 @@
 import React from 'react';
 
-const GameCard = (game) => {
-    console.log("game ne", game);
+const GameCard = ({game}) => {
     return (
         <div className="ui card">
             <div className="image">

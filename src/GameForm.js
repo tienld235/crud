@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-import { createGame } from './actions/actions';
+import { saveGame } from './actions/actions';
 import { Redirect } from 'react-router-dom';
 
 class GameForm extends Component {
@@ -96,4 +96,4 @@ class GameForm extends Component {
         )
     }
 }
-export default connect(null, { createGame })(GameForm);
+export default connect(null, { saveGame })(GameForm);

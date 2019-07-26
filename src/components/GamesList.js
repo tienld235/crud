@@ -1,7 +1,7 @@
 import React from 'react';
 import GameCard from './GameCard';
 
-const GamesList = (games) => {
+const GamesList = ({games}) => {
     const emptyMessage = <p>There are no games yet in your collection</p>;
 
     const gamesList = 
