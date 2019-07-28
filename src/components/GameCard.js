@@ -1,6 +1,7 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
-const GameCard = ({game}) => {
+const GameCard = ({game, deleteGame}) => {
     return (
         <div className="ui card">
             <div className="image">
@@ -8,6 +9,12 @@ const GameCard = ({game}) => {
             </div>
             <div className="content">
                 <div className="header" >{game.title}</div>
+            </div>
+            <div className="extra content">
+                <div className="ui two buttons">
+                    <Link to={`/game/${game._id}`} className="ui basic button green">Edit</Link>
+                    <Link className="ui basic button red" onClick={()=> deleteGame(game._id)}>Delete</Link>
+                </div>
             </div>
         </div>
     )

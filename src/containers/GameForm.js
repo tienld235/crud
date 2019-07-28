@@ -1,16 +1,30 @@
 import React, { Component } from 'react'
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-import { saveGame } from './actions/actions';
+import { saveGame, fetchGame, updateGame } from '../actions/actions';
 import { Redirect } from 'react-router-dom';
 
 class GameForm extends Component {
     state = {
-        title: '',
-        cover: '',
+        _id: this.props.game ? this.props.game._id : null,
+        title: this.props.game ? this.props.game.title : '',
+        cover: this.props.game ? this.props.game.cover : '',
         errors: {},
         loading: false,
         done: false
+    }
+    componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            _id: nextProps.game._id,
+            title: nextProps.game.title,
+            cover: nextProps.game.cover,
+        })
+    }
+
+    componentDidMount(){
+        if(this.props.match.params._id){
+        this.props.fetchGame(this.props.match.params._id);
+        }
     }
 
     handleChange = (e) => {
@@ -27,7 +41,7 @@ class GameForm extends Component {
     }
 
     handleSubmit = (e) => {
-        const { title, cover } = this.state;
+        const { title, cover, _id } = this.state;
         e.preventDefault();
 
         // validation
@@ -40,10 +54,17 @@ class GameForm extends Component {
 
         if (isValid) {
             this.setState({ loading: true })
-            this.props.createGame({ title, cover }).then(
-                () => { this.setState({ done: true }) },
-                (err) => err.response.json().then(({ errors }) => this.setState({ errors, loading: false }))
-            );
+            if(_id){
+                this.props.updateGame({_id, title, cover}).then(
+                    () => { this.setState({ done: true }) },
+                    (err) => err.response.json().then(({ errors }) => this.setState({ errors, loading: false }))
+                );
+            }else{
+                this.props.saveGame({ title, cover }).then(
+                    () => { this.setState({ done: true }) },
+                    (err) => err.response.json().then(({ errors }) => this.setState({ errors, loading: false }))
+                );
+            }
         }
 
     }
@@ -91,9 +112,18 @@ class GameForm extends Component {
     render() {
         return (
             <div>
-                {this.state.done ? <Redirect to="/games"/> : this.renderForm()}
+                {this.state.done ? <Redirect to="/games" /> : this.renderForm()}
             </div>
         )
     }
 }
-export default connect(null, { saveGame })(GameForm);
+
+const mapStateToProps = (state, props) => {
+    if (props.match.params._id) {
+        return {
+            game: state.games.find(item => item._id = props.match.params._id)
+        }
+    }
+    return { game: null };
+}
+export default connect(mapStateToProps, { saveGame, fetchGame, updateGame })(GameForm);

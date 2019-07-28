@@ -40,6 +40,40 @@ mongoose.connect(dbUrl, function (err, db) {
         }
     })
 
+    app.get('/api/games/:_id', (req, res) => {
+        db.collection('games').findOne({ _id: new mongoose.Types.ObjectId(req.params._id) }, (err, game) => {
+            res.json(game);
+        })
+    })
+
+    app.put('/api/games/:_id', (req, res) => {
+        const { errors, isValid } = validate(req.body);
+
+        if (isValid) {
+            const { title, cover } = req.body;
+            db.collection('games').findOneAndUpdate(
+                { _id: new mongoose.Types.ObjectId(req.params._id) },
+                { $set: { title, cover } },
+                { returnOriginal: false },
+                (err, result) => {
+                    if (err) { res.status(500).json({ errors: { global: err } }); return }
+                    res.json({ game: result.value });
+                }
+            )
+
+        } else {
+            res.status(400).json({ errors })
+        }
+    })
+
+    app.delete('/api/games/:_id', (req, res) => {
+        console.log('id nè', req.params._id);
+        db.collection('games').deleteOne({ _id: new mongoose.Types.ObjectId(req.params._id) }, (err, r) => {
+            if (err) { res.status(500).json({ errors: { global: err }}); return }
+            res.json({});
+        })
+    });
+
     app.use((req, res) => {
         res.status(404).json({
             errors: {
