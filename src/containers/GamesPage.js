@@ -4,24 +4,25 @@ import GamesList from '../components/GamesList';
 import { fetchGames, deleteGame } from '../actions/actions';
 
 class GamesPage extends React.Component {
-    componentWillMount() {
+    componentWillMount = () => {
         this.props.fetchGames();
     }
 
-    render() {
-        return (
+    render= () => (
             <div>
                 <h1>Game List</h1>
                 <GamesList games={this.props.games} deleteGame={this.props.deleteGame} />
             </div>
-        )
-    }
+    )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        games: state.games
-    }
-}
+const mapStateToProps = (state) => ({
+    games: state.games
+});
 
-export default connect(mapStateToProps, { fetchGames, deleteGame })(GamesPage);
+const mapDispatchToProps = dispatch => ({
+    fetchGames: () => dispatch(fetchGames()),
+    deleteGame: (id) => dispatch(deleteGame(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GamesPage);

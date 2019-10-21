@@ -1,33 +1,4 @@
 import { GET_GAMES, CREATE_GAME, GET_GAME, UPDATE_GAME, DELETE_GAME} from '../actionTypes/index';
-export function fetchGames() {
-    return async dispatch => {
-        const response  = await fetch('http://127.0.0.1:5000/api/games');
-        const games = await response.json();
-        dispatch(dispatchGetGames(games));
-    }
-}
-
-export function fetchGame(id) {
-    return async dispatch => {
-        const response  = await fetch(`http://127.0.0.1:5000/api/games/${id}`);
-        const game = await response.json();
-        dispatch(dispatchGetGame(game));
-    }
-}
-
-export function dispatchGetGame(game){
-    return {
-        type : GET_GAME,
-        game
-    }
-}
-
-export function dispatchGetGames(games) {
-    return {
-        type: GET_GAMES,
-        games
-    }
-}
 
 function handleResponse(response) {
     if (response.ok) {
@@ -39,10 +10,25 @@ function handleResponse(response) {
     }
 }
 
-export function dispatchCreateGame(game){
-    return {
-        type: CREATE_GAME,
-        game
+export function fetchGames() {
+    return async dispatch => {
+        const response  = await fetch('http://127.0.0.1:5000/api/games');
+        const games = await response.json();
+        dispatch({
+            type: GET_GAMES,
+            games
+        });
+    }
+}
+
+export function fetchGame(id) {
+    return async dispatch => {
+        const response  = await fetch(`http://127.0.0.1:5000/api/games/${id}`);
+        const game = await response.json();
+        dispatch({
+            type : GET_GAME,
+            game
+        });
     }
 }
 
@@ -58,7 +44,10 @@ export function saveGame(data) {
         // console.log("games", games);
         
         handleResponse(game);
-        await dispatch(dispatchCreateGame(game));
+        await dispatch({
+            type: CREATE_GAME,
+            game
+        });
     }
 }
 
@@ -72,14 +61,10 @@ export function updateGame(data){
             }
         });
         handleResponse(game);
-        await dispatch(dispatchUpdateGame(game));
-    }
-}
-
-export function dispatchUpdateGame(game){
-    return {
-        type: UPDATE_GAME,
-        game
+        await dispatch({
+            type: UPDATE_GAME,
+            game
+        });
     }
 }
 
@@ -92,13 +77,9 @@ export function deleteGame(id){
             }
         });
         handleResponse(game);
-        await dispatch(dispatchDeleteGame(id));
-    }
-}
-
-export function dispatchDeleteGame(gameId){
-    return {
-        type : DELETE_GAME,
-        gameId
+        await dispatch({
+            type : DELETE_GAME,
+            id
+        });
     }
 }

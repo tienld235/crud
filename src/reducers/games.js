@@ -7,7 +7,7 @@ export default function games(state = [], action = {}) {
         case GET_GAMES:
             return action.games;
         case GET_GAME:
-            const index = state.findIndex(item => item._id = action.game._id);
+            const index = state.findIndex(item => item._id === action.game._id);
             if (index > -1) {
                 return state.map(item => {
                     if (item._id === action.game._id) return action.game;
@@ -25,7 +25,7 @@ export default function games(state = [], action = {}) {
                 return item;
             })
         case DELETE_GAME:
-            return state.filter(item => item._id !== action.gameId)
+            return state.filter(item => item._id !== action.id)
         default: return state;
     }
 }

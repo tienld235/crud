@@ -21,7 +21,7 @@ class GameForm extends Component {
         })
     }
 
-    componentDidMount(){
+    componentDidMount = () => {
         if(this.props.match.params._id){
         this.props.fetchGame(this.props.match.params._id);
         }
@@ -69,7 +69,7 @@ class GameForm extends Component {
 
     }
 
-    renderForm = () =>
+    renderForm = () => (
         <div>
             <form className={classnames('ui', 'form', { loading: this.state.loading })} onSubmit={this.handleSubmit}>
                 <h1>Add New Game</h1>
@@ -108,22 +108,23 @@ class GameForm extends Component {
                 </div>
             </form>
         </div>
+    )
 
-    render() {
-        return (
-            <div>
-                {this.state.done ? <Redirect to="/games" /> : this.renderForm()}
-            </div>
-        )
-    }
+    render = () => (
+        <div>
+            {this.state.done ? <Redirect to="/games" /> : this.renderForm()}
+        </div>
+    )
 }
 
-const mapStateToProps = (state, props) => {
-    if (props.match.params._id) {
-        return {
-            game: state.games.find(item => item._id = props.match.params._id)
-        }
-    }
-    return { game: null };
-}
-export default connect(mapStateToProps, { saveGame, fetchGame, updateGame })(GameForm);
+const mapStateToProps = (state, props) => (
+    props.match.params._id ? { game: state.games.find(item => item._id = props.match.params._id) } : { game: null }
+)
+
+const mapDispatchToProps = dispatch => ({
+    saveGame: (data) => dispatch(saveGame(data)),
+    fetchGame: (id) => dispatch(fetchGame(id)),
+    updateGame: (data)=> dispatch(updateGame(data))
+});
+ 
+export default connect(mapStateToProps, mapDispatchToProps)(GameForm);
