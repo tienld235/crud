@@ -1,6 +1,6 @@
 import { GET_GAMES, CREATE_GAME, GET_GAME, UPDATE_GAME, DELETE_GAME} from '../actionTypes/index';
 
-function handleResponse(response) {
+const handleResponse = (response) => {
     if (response.ok) {
         return response.json();
     } else {
@@ -10,8 +10,8 @@ function handleResponse(response) {
     }
 }
 
-export function fetchGames() {
-    return async dispatch => {
+export const fetchGames = () => (
+    async dispatch => {
         const response  = await fetch('http://127.0.0.1:5000/api/games');
         const games = await response.json();
         dispatch({
@@ -19,10 +19,10 @@ export function fetchGames() {
             games
         });
     }
-}
+)
 
-export function fetchGame(id) {
-    return async dispatch => {
+export const fetchGame = (id) => (
+    async dispatch => {
         const response  = await fetch(`http://127.0.0.1:5000/api/games/${id}`);
         const game = await response.json();
         dispatch({
@@ -30,29 +30,27 @@ export function fetchGame(id) {
             game
         });
     }
-}
+)
 
-export function saveGame(data) {
-    return async dispatch => {
+export const saveGame = (data) => (
+    async dispatch => {
         const game = await fetch('http://127.0.0.1:5000/api/games', {
             method: 'post',
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json"
             }
-        });
-        // console.log("games", games);
-        
+        }); 
         handleResponse(game);
         await dispatch({
             type: CREATE_GAME,
             game
         });
     }
-}
+)
 
-export function updateGame(data){
-    return async dispatch => {
+export const updateGame = (data) => (
+    async dispatch => {
         const game = await fetch(`http://127.0.0.1:5000/api/games/${data._id}`, {
             method: 'put',
             body: JSON.stringify(data),
@@ -66,10 +64,10 @@ export function updateGame(data){
             game
         });
     }
-}
+)
 
-export function deleteGame(id){
-    return async dispatch => {
+export const deleteGame = (id) => (
+    async dispatch => {
         const game = await fetch(`http://127.0.0.1:5000/api/games/${id}`, {
             method: 'delete',
             headers: {
@@ -82,4 +80,4 @@ export function deleteGame(id){
             id
         });
     }
-}
+)
